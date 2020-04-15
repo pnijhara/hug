@@ -1157,7 +1157,9 @@ def test_cli_with_hug_types():
     assert hug.test.cli(succeed, success="false") == "No :("
 
     @hug.cli()
-    def all_the(types: hug.types.multiple = []):
+    def all_the(types: hug.types.multiple = None):
+        if types is None:
+            types = []
         return types or ["nothing_here"]
 
     assert hug.test.cli(all_the) == ["nothing_here"]
@@ -1565,13 +1567,17 @@ def test_cli_with_multiple_ints():
             return [int(number) for number in value]
 
     @hug.cli()
-    def test_multiple_cli(ints: ListOfInts() = []):
+    def test_multiple_cli(ints: ListOfInts() = None):
+        if ints is None:
+            ints = []
         return ints
 
     assert hug.test.cli(test_multiple_cli, ints=["1", "2", "3"]) == [1, 2, 3]
 
     @hug.cli()
-    def test_multiple_cli(ints: hug.types.Multiple[int]() = []):
+    def test_multiple_cli(ints: hug.types.Multiple[int]() = None):
+        if ints is None:
+            ints = []
         return ints
 
     assert hug.test.cli(test_multiple_cli, ints=["1", "2", "3"]) == [1, 2, 3]
